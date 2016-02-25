@@ -3,7 +3,8 @@
 namespace App\Api\V1\Controllers;
 
 use JWTAuth;
-use App\Book;
+use App\Team;
+use App\Region;
 use Dingo\Api\Routing\Helpers;
 
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class BookController extends Controller
+class TeamController extends Controller
 {
 	use Helpers;
 
@@ -22,12 +23,7 @@ class BookController extends Controller
 	 */
 	public function index()
 	{
-		$currentUser = JWTAuth::parseToken()->authenticate();
-		return $currentUser
-			->books()
-			->orderBy('created_at', 'DESC')
-			->get()
-			->toArray();
+		return Team::orderBy('name', 'ASC')->get()->toArray();
 	}
 
 	/**
@@ -48,18 +44,25 @@ class BookController extends Controller
 	 */
 	public function store(Request $request)
 	{
-		$currentUser = JWTAuth::parseToken()->authenticate();
+		$team = new Team;
 
-		$book = new Book;
+		$team->name = $request->get('name');
+		$team->slug = $request->get('slug');
+		$team->region_id = $request->get('region_id');
+    $team->games_count = 0;
+		$team->wins_count = 0;
 
-		$book->title = $request->get('title');
-		$book->author_name = $request->get('author_name');
-		$book->pages_count = $request->get('pages_count');
+		$region = Region::find($team->region_id);
+		if (!$region)
+			throw new NotFoundHttpException;
 
-		if ($currentUser->books()->save($book))
-			return $this->response->created();
-		else
-			return $this->response->errir('could_not_create_book', 500);
+		$region->teams_count++;
+		$region->save();
+
+    if ($team->save())
+      return $this->response->created();
+    else
+    return $this->response->error('could_not_create_team', 500);
 	}
 
 	/**
@@ -70,13 +73,11 @@ class BookController extends Controller
 	 */
 	public function show($id)
 	{
-		$currentUser = JWTAuth::parseToken()->authenticate();
+		$team = Team::find($id);
 
-		$book = $currentUser->books()->find($id);
-
-		if (!$book)
+		if (!$team)
 			throw new NotFoundHttpException;
-		return $book;
+		return $team;
 	}
 
 	/**
@@ -99,19 +100,17 @@ class BookController extends Controller
 	 */
 	public function update(Request $request, $id)
 	{
-		$currentUser = JWTAuth::parseToken()->authenticate();
+		$team = Team::find($id);
 
-		$book = $currentUser->books()->find($id);
-
-		if (!$book)
+		if (!$team)
 			throw new NotFoundHttpException;
 
-		$book->fill($request->all());
+		$team->fill($request->all());
 
-		if ($book->save())
+		if ($team->save())
 			return $this->response->noContent();
 		else
-			return $this->response->error('could_not_update_book');
+			return $this->response->error('could_not_update_region');
 	}
 
 	/**
@@ -122,16 +121,17 @@ class BookController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$currentUser = JWTAuth::parseToken()->authenticate();
+		$team = Team::find($id);
+		$region = Region::find($team->region_id);
+		$region->teams_count--;
+		$region->save();
 
-		$book = $currentUser->books()->find($id);
-
-		if (!$book)
+		if (!$team)
 			throw new NotFoundHttpException;
 
-		if ($book->delete())
+		if ($team->delete())
 			return $this->response->noContent();
 		else
-			return $this->response->error('could_not_delete_book');
+			return $this->response->error('could_not_delete_region');
 	}
 }

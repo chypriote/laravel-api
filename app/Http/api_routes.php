@@ -1,5 +1,5 @@
 <?php
-	
+
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
@@ -11,6 +11,11 @@ $api->version('v1', function ($api) {
 
 	$api->group(['middleware' => 'api.auth'], function($api) {
 		$api->resource('books', 'App\Api\V1\Controllers\BookController');
+
+		$api->resource('regions', 'App\Api\V1\Controllers\RegionController');
+		$api->get('regions/{id}/teams', 'App\Api\V1\Controllers\RegionController@showTeams');
+
+		$api->resource('teams', 'App\Api\V1\Controllers\TeamController');
 	});
 
 	// example of protected route
