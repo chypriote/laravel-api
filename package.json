@@ -1,0 +1,21 @@
+{
+	"name": "league-api",
+	"version": "1.0.0",
+	"description": "Laravel API Boilerplate is a ready-to-use \"starting pack\" that you can use to build your first API in seconds. As you can easily imagine, it is built on top of the awesome Laravel Framework.",
+	"main": "index.php",
+	"directories": {
+		"test": "tests"
+	},
+	"scripts": {
+		"test": "exit 0"
+	},
+	"author": "ChypRiotE",
+	"license": "MIT",
+	"devDependencies": {
+		"gulp": "^3.8.8"
+	},
+	"dependencies": {
+		"laravel-elixir": "^3.0.0",
+		"bootstrap-sass": "^3.0.0"
+	}
+}
