@@ -10,8 +10,6 @@ $api->version('v1', function ($api) {
 	$api->post('auth/reset', 'App\Api\V1\Controllers\AuthController@reset');
 
 	$api->group(['middleware' => 'api.auth'], function($api) {
-		$api->resource('books', 'App\Api\V1\Controllers\BookController');
-
 		$api->resource('regions', 'App\Api\V1\Controllers\RegionController');
 		$api->get('regions/{id}/teams', 'App\Api\V1\Controllers\RegionController@showTeams');
 

@@ -48,10 +48,14 @@ class GameController extends Controller
 		$game->week = $request->get('week');
 		$game->team_1 = $request->get('team_1');
 		$game->team_2 = $request->get('team_2');
-		$game->compo_1 = $request->get('compo_1');
-		$game->compo_2 = $request->get('compo_2');
-		$game->ban_1 = $request->get('ban_1');
-		$game->ban_2 = $request->get('ban_2');
+		$compo1 = new Compo($request->get('compo_1'));
+		$compo2 = new Compo($request->get('compo_2'));
+		$game->compo_1 = $compo1->save();
+		$game->compo_2 = $compo2->save();
+		$ban1 = new Ban($request->get('ban_1'));
+		$ban2 = new Ban($request->get('ban_2'));
+		$game->ban_1 = $ban1->save()
+		$game->ban_2 = $ban2->save();
 		$game->winner = $request->get('winner');
 
 		if ($game->save())
