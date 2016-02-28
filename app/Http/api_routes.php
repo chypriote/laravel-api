@@ -16,6 +16,8 @@ $api->version('v1', function ($api) {
 		$api->get('regions/{id}/teams', 'App\Api\V1\Controllers\RegionController@showTeams');
 
 		$api->resource('teams', 'App\Api\V1\Controllers\TeamController');
+		$api->resource('champions', 'App\Api\V1\Controllers\ChampionController');
+		$api->resource('games', 'App\Api\V1\Controllers\GameController');
 	});
 
 	// example of protected route

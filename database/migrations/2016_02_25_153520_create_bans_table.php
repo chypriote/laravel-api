@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTeamsTable extends Migration
+class CreateBansTable extends Migration
 {
 	/**
 	 * Run the migrations.
@@ -12,15 +12,15 @@ class CreateTeamsTable extends Migration
 	 */
 	public function up()
 	{
-		Schema::create('teams', function (Blueprint $table) {
+		Schema::create('bans', function (Blueprint $table) {
 			$table->increments('id');
 
-			$table->string('name');
-			$table->string('slug');
-			$table->integer('games_count');
-			$table->integer('wins_count');
+			$table->integer('ban_1');
+			$table->integer('ban_2');
+			$table->integer('ban_3');
 
-			$table->integer('region_id')->index();
+			$table->integer('team_id')->index();
+			$table->integer('game_id')->index();
 
 			$table->timestamps();
 		});
@@ -33,6 +33,6 @@ class CreateTeamsTable extends Migration
 	 */
 	public function down()
 	{
-		Schema::drop('teams');
+		Schema::drop('bans');
 	}
 }
